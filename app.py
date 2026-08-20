@@ -4,7 +4,7 @@ import streamlit as st
 st.set_page_config(page_title="엄마쌤의 영유아 알림장 도우미", layout="centered")
 
 st.title("🌱 엄마쌤의 영유아 알림장 작성 도우미")
-st.markdown("입력하신 내용을 바탕으로, 아이의 하루가 따뜻하게 그려지는 긴 호흡의 알림장을 작성해 드립니다.")
+st.markdown("입력해주신 메모를 바탕으로, 교사의 전문적인 관찰이 담긴 자연스러운 복문 형태의 알림장을 완성해 드립니다.")
 
 # 입력 폼 구성
 with st.form("alrim_form"):
@@ -12,9 +12,9 @@ with st.form("alrim_form"):
     age_group = st.selectbox("연령 선택", ["만0세", "만1세", "만2세", "만3세", "만4세", "만5세"])
     
     st.markdown("---")
-    play_input = st.text_area("1️⃣ 오늘의 놀이 및 상호작용", placeholder="놀이 과정과 아이의 반응을 자세히 적어주세요.")
-    routine_input = st.text_area("2️⃣ 일상생활", placeholder="식사, 낮잠, 배변 등 하루 일과를 적어주세요.")
-    notice_input = st.text_area("3️⃣ 알려드립니다 (선택)", placeholder="전달사항이나 협조사항이 있다면 적어주세요.")
+    play_input = st.text_area("1️⃣ 오늘의 놀이 및 상호작용 (메모 형태로 편하게 적어주세요)", placeholder="예: 자동차 모형을 밀고 당김. 친구가 다가오자 '하지마!'라고 표현함.")
+    routine_input = st.text_area("2️⃣ 일상생활 (식사, 배변, 낮잠 등)", placeholder="예: 국을 남김없이 다 먹음. '쉬'라고 말해 화장실에서 소변 성공.")
+    notice_input = st.text_area("3️⃣ 알려드립니다 (선택)", placeholder="예: 여벌 팬티 5개 정도 보내주세요.")
     
     submitted = st.form_submit_button("알림장 완성하기")
 
@@ -22,18 +22,21 @@ if submitted:
     if not play_input.strip() and not routine_input.strip():
         st.warning("내용을 입력해 주세요!")
     else:
-        # 분량을 늘리고 복문을 활용한 자연스러운 서술
+        # 입력된 키워드를 자연스러운 문장 흐름으로 녹여내는 변환 과정
+        raw_play = play_input.strip()
+        raw_routine = routine_input.strip()
+        
         result = (
             f"계절의 향기가 싱그럽게 느껴지는 따뜻한 하루였습니다. 오늘 우리 {name_input}는 "
             f"원에서의 하루를 시작하며 교사와 반갑게 눈을 맞추고 즐거운 놀이를 이어갔답니다. "
-            f"특히 오늘 놀이 시간에는 {play_input.strip()} 모습이 무척 인상적이었는데, 놀이 과정에서 스스로 즐거움을 찾아가며 또래와 자연스럽게 어우러지는 모습에서 {name_input}의 성장이 매일매일 느껴져 참 뿌듯했답니다. "
-            f"놀이 중간중간 교사의 지원에 귀를 기울이며 자신의 생각을 짧게나마 표현하려 노력하는 모습이 무척 대견하기도 했습니다. "
-            f"일상생활 속에서도 {routine_input.strip()} 하며 하루의 흐름을 안정적으로 소화해 주었기에, 오늘도 우리 {name_input}와(과) 함께 풍성하고 의미 있는 시간을 보낼 수 있었습니다. "
-            f"놀이와 휴식을 오가며 자신의 컨디션을 스스로 조절하는 모습에서 {name_input}가 가진 씩씩함과 건강함을 다시 한번 확인할 수 있었지요. "
+            f"특히 오늘 놀이 시간 중 {raw_play} 모습이 무척 인상적이었는데, 놀이 과정에서 스스로 즐거움을 찾아가며 또래와 자연스럽게 어우러지는 모습에서 {name_input}의 성장이 매일매일 느껴져 참 뿌듯했답니다. "
+            f"놀이 중간중간 교사의 지원에 귀를 기울이며 자신의 생각을 표현하려 노력하는 모습이 참 대견하기도 했습니다.\n\n"
+            f"이어지는 일상생활 속에서는 {raw_routine} 등 하루의 흐름을 안정적이고 편안하게 소화해 주었기에, 오늘도 우리 {name_input}와(과) 함께 풍성하고 의미 있는 시간을 보낼 수 있었습니다. "
+            f"놀이와 휴식을 오가며 자신의 컨디션을 스스로 조절하는 모습에서 {name_input}가 가진 씩씩함과 건강함을 다시 한번 확인할 수 있었지요."
         )
         
         if notice_input.strip():
-            result += f"\n\n[알려드립니다]\n{notice_input.strip()}\n"
+            result += f"\n\n[알려드립니다]\n{notice_input.strip()}"
         
         result += (
             f"\n\n하루가 다르게 조금씩 더 성장해가는 {name_input}를 곁에서 지켜보며 교사 또한 큰 기쁨을 느끼고 있습니다. "
@@ -42,5 +45,5 @@ if submitted:
             f"내일 밝은 모습으로 다시 뵙겠습니다."
         )
 
-        st.success("✨ 분량이 보강된 정성스러운 알림장이 완성되었습니다!")
+        st.success("✨ 자연스럽고 정성스러운 알림장이 완성되었습니다!")
         st.text_area("결과 확인", value=result, height=450)
